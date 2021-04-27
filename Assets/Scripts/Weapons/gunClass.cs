@@ -19,8 +19,10 @@ public class gunClass : MonoBehaviour
     float shootTimer;
     public float reloadTimer = 2.5f;
 
-    public float magCap = 12;
-    float currentMag = 12;
+    public float currentMag = 12;
+
+    public float[] gunMag;
+    public int[] magCap;
 
     public Text currentMagText;
     public Text magCapText;
@@ -33,6 +35,8 @@ public class gunClass : MonoBehaviour
 
     private void Start()
     {
+        gunMag = new float[3] { 12, 25, 20 };
+        magCap = new int[3] { 12, 25, 20 };
         Instance = this;
     }
     private void Update()
@@ -40,7 +44,7 @@ public class gunClass : MonoBehaviour
         anim = weaponSwitch.Instance.wepGameObject.GetComponent<Animation>();
         muzzleFlash = weaponSwitch.Instance.wepGameObject.GetComponentsInChildren<ParticleSystem>();
         shootTimer += Time.deltaTime;
-        if (Input.GetButtonDown("Fire1") && shootTimer >= cooldownTimer && currentMag > 0)
+        if (Input.GetButtonDown("Fire1") && shootTimer >= cooldownTimer && currentMag > 0 && weaponSwitch.Instance.wepUnlocked[weaponSwitch.Instance.selectedWeapon] == true)
         {
             Shoot();
             shootTimer = 0;
@@ -102,13 +106,8 @@ public class gunClass : MonoBehaviour
     void Reload()
     {
         Debug.Log("reloading function");
-        currentMag = magCap;
+        currentMag = magCap[weaponSwitch.Instance.selectedWeapon];
         currentMagText.text = currentMag.ToString();
         isReloading = false;
-    }
-    public void IncreaseMag()
-    {
-        magCap += 4;
-        magCapText.text = "/" + magCap.ToString();
     }
 }

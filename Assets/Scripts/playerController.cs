@@ -16,6 +16,7 @@ public class playerController: MonoBehaviour
 
     public Slider playerhealthBar;
     public Text playerhealthText;
+    public Text playermaxhealthText;
 
     public float currentHealth = 15f;
     public float maxHealth = 100f;
@@ -71,6 +72,10 @@ public class playerController: MonoBehaviour
             {
                 shopManager.Instance.CloseShop();
             }
+            if (doorManager.Instance.door1IsOpen == true)
+            {
+                doorManager.Instance.CloseDoor1Menu();
+            }
         }
 
         float x = Input.GetAxis("Horizontal"); //ad
@@ -94,10 +99,9 @@ public class playerController: MonoBehaviour
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.gameObject.CompareTag("door1") && currentEnergy >= 100)
+        if (hit.gameObject.CompareTag("door1"))
         {
-            Destroy(hit.gameObject);
-            LoseEnergy(100);
+            doorManager.Instance.Door1Open();
         }
         if (hit.gameObject.CompareTag("shop"))
         {
@@ -129,5 +133,21 @@ public class playerController: MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void UpdateEnergy()
+    {
+        playerenergyBar.value = currentEnergy;
+        playerenergyText.text = currentEnergy.ToString();
+    }
+    public void UpdateHealth()
+    {
+        playerhealthBar.value = currentHealth;
+        playerhealthText.text = currentHealth.ToString();
+    }
+    public void UpdateHealthMax()
+    {
+        playerhealthBar.maxValue = maxHealth;
+        playermaxhealthText.text = "/" + maxHealth.ToString();
     }
 }

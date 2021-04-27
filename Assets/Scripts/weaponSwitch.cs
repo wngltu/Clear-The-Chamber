@@ -8,11 +8,14 @@ public class weaponSwitch : MonoBehaviour
 
     public GameObject wepGameObject;
 
+    public bool[] wepUnlocked;
+
     public static weaponSwitch Instance;
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
+        wepUnlocked = new bool[3] { true, false, false };
         int i = 0;
         foreach (Transform weapon in transform)
         {
@@ -27,7 +30,7 @@ public class weaponSwitch : MonoBehaviour
             }
             i++;
         }
-        Invoke("SelectWeapon", 1f);
+        Invoke("SelectWeapon", .1f);
     }
 
     // Update is called once per frame
@@ -59,6 +62,7 @@ public class weaponSwitch : MonoBehaviour
         }
         if (previousWep != selectedWeapon) //when wep selected is different, call method
         {
+            gunClass.Instance.gunMag[previousWep] = gunClass.Instance.currentMag;
             SelectWeapon();
         }
     }
@@ -68,7 +72,7 @@ public class weaponSwitch : MonoBehaviour
         int i = 0;
         foreach (Transform weapon in transform)
         {
-            if (i == selectedWeapon)
+            if (i == selectedWeapon && wepUnlocked[i] == true)
             {
                 weapon.gameObject.SetActive(true);
                 wepGameObject = weapon.gameObject;
@@ -83,27 +87,34 @@ public class weaponSwitch : MonoBehaviour
         {
             gunClass.Instance.damage = 10f;
             gunClass.Instance.range = 100f;
-            gunClass.Instance.magCap = 12;
+            gunClass.Instance.magCap[0] = 12;
             gunClass.Instance.magCapText.text = "/12";
             gunClass.Instance.reloadTimer = 2.5f;
+            gunClass.Instance.currentMag = gunClass.Instance.gunMag[0];
+            gunClass.Instance.currentMagText.text = gunClass.Instance.currentMag.ToString();
+
         }
 
-        if (selectedWeapon == 1)
+        if (selectedWeapon == 1 && wepUnlocked[selectedWeapon] == true)
         {
             gunClass.Instance.damage = 5f;
             gunClass.Instance.range = 50f;
-            gunClass.Instance.magCap = 25;
+            gunClass.Instance.magCap[1] = 25;
             gunClass.Instance.magCapText.text = "/25";
             gunClass.Instance.reloadTimer = 3f;
+            gunClass.Instance.currentMag = gunClass.Instance.gunMag[1];
+            gunClass.Instance.currentMagText.text = gunClass.Instance.currentMag.ToString();
         }
 
-        if (selectedWeapon == 2)
+        if (selectedWeapon == 2 && wepUnlocked[selectedWeapon] == true)
         {
             gunClass.Instance.damage = 20f;
             gunClass.Instance.range = 150f;
-            gunClass.Instance.magCap = 30;
-            gunClass.Instance.magCapText.text = "/30";
+            gunClass.Instance.magCap[2] = 20;
+            gunClass.Instance.magCapText.text = "/20";
             gunClass.Instance.reloadTimer = 4.5f;
+            gunClass.Instance.currentMag = gunClass.Instance.gunMag[2];
+            gunClass.Instance.currentMagText.text = gunClass.Instance.currentMag.ToString();
         }
     }
 }

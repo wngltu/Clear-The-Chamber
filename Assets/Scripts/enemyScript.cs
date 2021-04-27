@@ -53,7 +53,7 @@ public class enemyScript : MonoBehaviour
             agent.isStopped = true;
             agent.speed = 0;
             Death();
-            playerController.Instance.GainEnergy(50);
+            playerController.Instance.GainEnergy(250);
         }
     }
     public void TakeCritDamage(float damage)
@@ -68,7 +68,7 @@ public class enemyScript : MonoBehaviour
             agent.isStopped = true;
             agent.speed = 0;
             Death();
-            playerController.Instance.GainEnergy(50);
+            playerController.Instance.GainEnergy(250);
         }
     }
     private void OnTriggerEnter(Collider other)

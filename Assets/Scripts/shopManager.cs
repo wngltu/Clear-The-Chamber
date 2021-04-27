@@ -30,12 +30,39 @@ public class shopManager : MonoBehaviour
         open = false;
     }
 
-    public void ExtendMags()
+    public void smgBuy()
     {
-        if (playerController.Instance.currentEnergy >= 50)
+        if (playerController.Instance.currentEnergy >= 300)
         {
-            gunClass.Instance.IncreaseMag();
-            playerController.Instance.LoseEnergy(50);
+            weaponSwitch.Instance.wepUnlocked[1] = true;
+            playerController.Instance.LoseEnergy(300);
+        }
+    }
+    public void rifleBuy()
+    {
+        if (playerController.Instance.currentEnergy >= 500)
+        {
+            weaponSwitch.Instance.wepUnlocked[2] = true;
+            playerController.Instance.LoseEnergy(500);
+        }
+    }
+    public void healthRestore()
+    {
+        if (playerController.Instance.currentEnergy >= 150 && playerController.Instance.currentHealth != playerController.Instance.maxHealth)
+        {
+            playerController.Instance.currentHealth = playerController.Instance.maxHealth;
+            playerController.Instance.UpdateHealth();
+            playerController.Instance.LoseEnergy(150);
+        }
+    }
+    public void healthMax()
+    {
+        if (playerController.Instance.currentEnergy >= 200)
+        {
+            playerController.Instance.maxHealth += 50;
+            playerController.Instance.UpdateHealthMax();
+            playerController.Instance.UpdateHealth();
+            playerController.Instance.LoseEnergy(200);
         }
     }
 }
