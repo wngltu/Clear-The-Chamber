@@ -19,13 +19,16 @@ public class playerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSens *Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSens *Time.deltaTime;
+        if (playerController.Instance.playerhealthBar.value > 0)
+        {
+            float mouseX = Input.GetAxis("Mouse X") * mouseSens * Time.deltaTime;
+            float mouseY = Input.GetAxis("Mouse Y") * mouseSens * Time.deltaTime;
 
-        xrot -= mouseY;
-        xrot = Mathf.Clamp(xrot, -90f, 90f);
+            xrot -= mouseY;
+            xrot = Mathf.Clamp(xrot, -90f, 90f);
 
-        transform.localRotation = Quaternion.Euler(xrot, 0, 0);
-        playerBody.Rotate(Vector3.up * mouseX);
+            transform.localRotation = Quaternion.Euler(xrot, 0, 0);
+            playerBody.Rotate(Vector3.up * mouseX);
+        }
     }
 }

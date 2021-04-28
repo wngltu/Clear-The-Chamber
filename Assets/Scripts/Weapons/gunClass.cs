@@ -15,7 +15,7 @@ public class gunClass : MonoBehaviour
     public ParticleSystem muzzleflash;
     public ParticleSystem bulletTrail;
 
-    float cooldownTimer = .25f;
+    public float cooldownTimer = .25f;
     float shootTimer;
     public float reloadTimer = 2.5f;
 
@@ -44,12 +44,13 @@ public class gunClass : MonoBehaviour
         anim = weaponSwitch.Instance.wepGameObject.GetComponent<Animation>();
         muzzleFlash = weaponSwitch.Instance.wepGameObject.GetComponentsInChildren<ParticleSystem>();
         shootTimer += Time.deltaTime;
-        if (Input.GetButtonDown("Fire1") && shootTimer >= cooldownTimer && currentMag > 0 && weaponSwitch.Instance.wepUnlocked[weaponSwitch.Instance.selectedWeapon] == true)
+        if (Input.GetButtonDown("Fire1") && shootTimer >= cooldownTimer && currentMag > 0 
+            && weaponSwitch.Instance.wepUnlocked[weaponSwitch.Instance.selectedWeapon] == true && weaponSwitch.Instance.selectedWeapon == 0)
         {
             Shoot();
             shootTimer = 0;
         }
-        else if (Input.GetButtonDown("Fire1") && currentMag <= 0 && !isReloading)
+        else if (Input.GetButtonDown("Fire1") && currentMag <= 0 && !isReloading && weaponSwitch.Instance.selectedWeapon == 0)
         {
             anim.Play();
             isReloading = true;
@@ -60,8 +61,27 @@ public class gunClass : MonoBehaviour
             Invoke("Reload", reloadTimer);
             FindObjectOfType<soundManager>().Play("pistolEmpty");
         }
+        if (Input.GetButton("Fire1") && shootTimer >= cooldownTimer && currentMag > 0 
+            && weaponSwitch.Instance.wepUnlocked[weaponSwitch.Instance.selectedWeapon] == true && weaponSwitch.Instance.selectedWeapon != 0)
+        {
+            Shoot();
+            shootTimer = 0;
+        }
+        else if (Input.GetButton("Fire1") && currentMag <= 0 && !isReloading && weaponSwitch.Instance.selectedWeapon != 0)
+        {
+            anim.Play();
+            isReloading = true;
+            currentMag = 0;
+            currentMagText.text = currentMag.ToString();
+            Debug.Log("left click reloading");
+            shootTimer = reloadTimer;
+            Invoke("Reload", reloadTimer);
+            FindObjectOfType<soundManager>().Play("pistolEmpty");
+        }
+
         if (Input.GetKeyDown(KeyCode.R) && !isReloading)
         {
+            FindObjectOfType<soundManager>().Play("pistolEmpty");
             anim.Play();
             isReloading = true;
             currentMag = 0;
@@ -99,6 +119,30 @@ public class gunClass : MonoBehaviour
                 if (enemy != null)
                 {
                     enemy.TakeCritDamage(damage);
+                }
+            }
+            if (hit.transform.CompareTag("enemy2"))
+            {
+                enemy2Script enemy = hit.transform.GetComponent<enemy2Script>();
+                if (enemy != null)
+                {
+                    enemy.TakeDamage(damage);
+                }
+            }
+            if (hit.transform.CompareTag("critenemy2"))
+            {
+                enemy2Script enemy = hit.transform.GetComponentInParent<enemy2Script>();
+                if (enemy != null)
+                {
+                    enemy.TakeCritDamage(damage);
+                }
+            }
+            if (hit.transform.CompareTag("barrel"))
+            {
+                explosiveScript barrel = hit.transform.GetComponentInParent<explosiveScript>();
+                if (barrel != null)
+                {
+                    barrel.Explode();
                 }
             }
         }

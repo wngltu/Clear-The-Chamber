@@ -15,7 +15,10 @@ public class enemyhpBarLookat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        camera = GameObject.Find("cameraobject").GetComponent<Transform>();
-        canvas.transform.LookAt(camera);
+        if (playerController.Instance.currentHealth > 0)
+        {
+            camera = GameObject.Find("cameraobject").GetComponent<Transform>();
+            canvas.transform.LookAt(camera);
+        }
     }
 }

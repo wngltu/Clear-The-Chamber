@@ -8,6 +8,13 @@ TagManager:
   - critenemy
   - door1
   - shop
+  - barrel
+  - enemy2
+  - critenemy2
+  - killtrigger
+  - door2
+  - chamber2
+  - chamber3
   layers:
   - Default
   - TransparentFX

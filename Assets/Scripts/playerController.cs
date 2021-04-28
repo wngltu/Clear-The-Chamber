@@ -24,14 +24,21 @@ public class playerController: MonoBehaviour
     public Slider playerenergyBar;
     public Text playerenergyText;
 
+    public Text chamberText;
+
     public float currentEnergy = 0f;
     public float maxEnergy = 1000f;
 
     public float speed = 12f;
     public float gravityforce = -25f;
 
-    public ParticleSystem gainParticles;
     public ParticleSystem loseParticles;
+    public ParticleSystem deathParticles;
+
+    public GameObject deathCam;
+    public GameObject gameoverPanel;
+
+    public bool won = false;
 
     Vector3 vel;
     // Start is called before the first frame update
@@ -48,6 +55,8 @@ public class playerController: MonoBehaviour
         playerenergyBar.maxValue = maxEnergy;
         playerenergyBar.value = currentEnergy;
         playerenergyText.text = currentEnergy.ToString();
+
+        FindObjectOfType<soundManager>().Play("Chamber1");
     }
 
     // Update is called once per frame
@@ -76,6 +85,15 @@ public class playerController: MonoBehaviour
             {
                 doorManager.Instance.CloseDoor1Menu();
             }
+            if (doorManager.Instance.door2IsOpen == true)
+            {
+                doorManager.Instance.CloseDoor2Menu();
+            }
+        }
+
+        if (won == true)
+        {
+            Cursor.lockState = CursorLockMode.None;
         }
 
         float x = Input.GetAxis("Horizontal"); //ad
@@ -96,12 +114,44 @@ public class playerController: MonoBehaviour
         {
             TakeDamage(15);
         }
+        if (other.gameObject.CompareTag("enemy2"))
+        {
+            TakeDamage(25);
+        }
+        if (other.gameObject.CompareTag("killtrigger"))
+        {
+            TakeDamage(playerController.Instance.currentHealth);
+        }
+        if (other.gameObject.CompareTag("chamber2"))
+        {
+            waveManager.Instance.wave = 2;
+            waveManager.Instance.enemiesLeft = 15;
+            waveManager.Instance.spawnsLeft = 15;
+            waveManager.Instance.UpdateEnemyCount();
+            chamberText.text = "Chamber 2";
+            FindObjectOfType<soundManager>().Play("Chamber2");
+            FindObjectOfType<soundManager>().Pause("shop");
+        }
+        if (other.gameObject.CompareTag("chamber3"))
+        {
+            waveManager.Instance.wave = 3;
+            waveManager.Instance.enemiesLeft = 25;
+            waveManager.Instance.spawnsLeft = 25;
+            waveManager.Instance.UpdateEnemyCount();
+            chamberText.text = "Chamber 3";
+            FindObjectOfType<soundManager>().Play("Chamber3");
+            FindObjectOfType<soundManager>().Pause("shop");
+        }
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.gameObject.CompareTag("door1"))
+        if (hit.gameObject.CompareTag("door1") && waveManager.Instance.enemiesLeft <= 0)
         {
             doorManager.Instance.Door1Open();
+        }
+        if (hit.gameObject.CompareTag("door2") && waveManager.Instance.enemiesLeft <= 0)
+        {
+            doorManager.Instance.Door2Open();
         }
         if (hit.gameObject.CompareTag("shop"))
         {
@@ -114,7 +164,6 @@ public class playerController: MonoBehaviour
         currentEnergy = currentEnergy + energy;
         playerenergyBar.value = currentEnergy;
         playerenergyText.text = currentEnergy.ToString();
-        gainParticles.Play();
     }
     public void LoseEnergy(float energy)
     {
@@ -131,7 +180,15 @@ public class playerController: MonoBehaviour
 
         if (currentHealth <= 0f)
         {
-            Destroy(gameObject);
+            currentHealth = 0;
+            playerhealthBar.value = currentHealth;
+            playerhealthText.text = currentHealth.ToString();
+            Instantiate(deathCam, transform.position, transform.rotation);
+            Instantiate(deathParticles, transform.position, transform.rotation);
+            waveManager.Instance.disableSpawn = true;
+            gameoverPanel.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+            this.gameObject.SetActive(false);
         }
     }
 

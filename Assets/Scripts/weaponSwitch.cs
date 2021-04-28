@@ -86,6 +86,7 @@ public class weaponSwitch : MonoBehaviour
         if (selectedWeapon == 0)
         {
             gunClass.Instance.damage = 10f;
+            gunClass.Instance.cooldownTimer = .2f;
             gunClass.Instance.range = 100f;
             gunClass.Instance.magCap[0] = 12;
             gunClass.Instance.magCapText.text = "/12";
@@ -97,7 +98,8 @@ public class weaponSwitch : MonoBehaviour
 
         if (selectedWeapon == 1 && wepUnlocked[selectedWeapon] == true)
         {
-            gunClass.Instance.damage = 5f;
+            gunClass.Instance.damage = 7f;
+            gunClass.Instance.cooldownTimer = .1f;
             gunClass.Instance.range = 50f;
             gunClass.Instance.magCap[1] = 25;
             gunClass.Instance.magCapText.text = "/25";
@@ -109,6 +111,7 @@ public class weaponSwitch : MonoBehaviour
         if (selectedWeapon == 2 && wepUnlocked[selectedWeapon] == true)
         {
             gunClass.Instance.damage = 20f;
+            gunClass.Instance.cooldownTimer = .3f;
             gunClass.Instance.range = 150f;
             gunClass.Instance.magCap[2] = 20;
             gunClass.Instance.magCapText.text = "/20";

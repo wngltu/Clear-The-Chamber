@@ -25,8 +25,8 @@ public class shopManager : MonoBehaviour
     }
     public void CloseShop()
     {
-        Cursor.lockState = CursorLockMode.Locked;
         shopMenu.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
         open = false;
     }
 
@@ -60,6 +60,7 @@ public class shopManager : MonoBehaviour
         if (playerController.Instance.currentEnergy >= 200)
         {
             playerController.Instance.maxHealth += 50;
+            playerController.Instance.currentHealth += 50;
             playerController.Instance.UpdateHealthMax();
             playerController.Instance.UpdateHealth();
             playerController.Instance.LoseEnergy(200);
